@@ -165,7 +165,7 @@ Prediction: [[value]]
 
 Shows how loss decreases during training:
 
-![Image](Costreduction.png)
+![Image](CostReduction.png)
 
 ---
 
