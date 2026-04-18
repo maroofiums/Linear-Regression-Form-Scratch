@@ -59,7 +59,7 @@ b = b - learning_rate * db
 ## ▶️ Installation
 
 ```bash
-git clone https://github.com/yourusername/Linear-Regression-Form-Scratch.git
+git clone https://github.com/maroofiums/Linear-Regression-Form-Scratch.git
 cd Linear-Regression-Form-Scratch
 pip install numpy matplotlib
 ```
