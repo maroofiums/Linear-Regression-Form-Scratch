@@ -11,7 +11,8 @@ class LinearRegression:
         self.costs = []
     
     def predict(self,X):
-        return self.w * X + self.b
+        X = np.array(X)
+        return np.dot(X,self.w) + self.b
     
     def compute_cost(self,y_pred,y_true):
         m = len(y_true)
@@ -22,13 +23,15 @@ class LinearRegression:
         X = np.array(X)
         y = np.array(y)
 
-        self.w = 0.0
+        m,n = X.shape
+
+        self.w = np.zeros(n)
         self.b = 0.0
-        m = len(y)
+
         for epoch in range(self.epoches):
             y_pred = self.predict(X)
 
-            dw = (1/m) * np.sum((y_pred-y)*X)
+            dw = (1/m) * np.dot(X.T,(y_pred - y))
             db = (1/m) * np.sum((y_pred-y))
 
             self.w -= self.learning_rate * dw
@@ -43,27 +46,59 @@ class LinearRegression:
     def get_param(self):
         return self.w,self.b
 
-    def plot_reg(self,X,y):
-        X = np.array(X)
-        y = np.array(y)
+    def plot_reg(self, X, y):
+        y_pred = self.predict(X)
 
-        plt.scatter(X,y,label="Data Points")
-        plt.plot(X,self.predict(X),label="Regression Line")
-        plt.xlabel("X")
-        plt.ylabel("Y")
-        plt.title("Linear Regression")
+        plt.scatter(y, y_pred, label="Pred vs Actual")
+        plt.plot([min(y), max(y)], [min(y), max(y)], 'r--', label="Perfect Fit")
+
+        plt.xlabel("Actual Y")
+        plt.ylabel("Predicted Y")
+        plt.title("Actual vs Predicted")
         plt.legend()
         plt.show()
 
-# Example Usage: 
+    def plot_cost(self):
+
+        plt.plot(self.costs)
+        plt.xlabel("Epoches")
+        plt.ylabel("Cost")
+        plt.title("Cost Reduction")
+        plt.show()
+
+
 if __name__ == "__main__":
-    X = [1,2,3,4,5]
-    y = [5,7,9,11,13]
 
-    model = LinearRegression(learning_rate=0.1, epoches=10000)
-    model.fit(X,y)
+    # Features:
+    # x1 = study hours
+    # x2 = sleep hours
 
+    X = [
+        [1, 6],
+        [2, 7],
+        [3, 8],
+        [4, 9],
+        [5, 10]
+    ]
+
+    # Formula:
+    # y = 2*x1 + 3*x2 + 5
+
+    y = [25, 30, 35, 40, 45]
+
+    model = LinearRegression(
+        learning_rate=0.01,
+        epoches=100
+    )
+
+    model.fit(X, y)
+
+    print("\nFinal Parameters:")
     print(model.get_param())
-    print(model.predict(6))
 
+    # Prediction
+    sample = [[6, 11]]
+    print("Prediction:", model.predict(sample))
+
+    model.plot_cost()
     model.plot_reg(X,y)
